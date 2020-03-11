@@ -110,7 +110,7 @@ if (!defined('__CSRF_PROTECTOR__')) {
          *                                            file are not available
          *
          */
-        public static function init($length = null, $action = null, $logger = null)
+        public static function init($config, $length = null, $action = null, $logger = null)
         {
             /*
              * Check if init has already been called.
@@ -136,16 +136,19 @@ if (!defined('__CSRF_PROTECTOR__')) {
              * a config/csrf_config.php file in the root folder
              * for composer installations
              */
-            $standard_config_location = __DIR__ ."/../config.php";
-            $composer_config_location = __DIR__ ."/../../../../../config/csrf_config.php";
+            if (is_string($config)) {
+                if (!file_exists($config)) {
+                    throw new configFileNotFoundException("OWASP CSRFProtector: configuration file not found for CSRFProtector!");
+                }
 
-            if (file_exists($standard_config_location)) {
-                self::$config = include($standard_config_location);
-            } elseif(file_exists($composer_config_location)) {
-                self::$config = include($composer_config_location);
-            } else {
-                throw new configFileNotFoundException("OWASP CSRFProtector: configuration file not found for CSRFProtector!");
+                // Path to the config file
+                $config = require $config;
             }
+
+            if (is_object($config)) {
+                $config = (array) $config;
+            }
+            self::$config = $config;
 
             //overriding length property if passed in parameters
             if ($length != null)
@@ -263,6 +266,11 @@ if (!defined('__CSRF_PROTECTOR__')) {
          * any (string / bool) - token retrieved from header or form payload
          */
         private static function getTokenFromRequest() {
+            // TEMPORARY FIX: look for in $_COOKIE, then others
+            if (isset($_COOKIE[self::$config['CSRFP_TOKEN']])) {
+                return $_COOKIE[self::$config['CSRFP_TOKEN']];
+            }
+
             // look for in $_POST, then header
             if (isset($_POST[self::$config['CSRFP_TOKEN']])) {
                 return $_POST[self::$config['CSRFP_TOKEN']];
