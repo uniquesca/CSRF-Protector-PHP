@@ -409,7 +409,9 @@ if (!defined('__CSRF_PROTECTOR__')) {
             setcookie(
                 self::$config['CSRFP_TOKEN'], 
                 $token,
-                time() + self::$cookieConfig->expire,
+                (is_int(self::$cookieConfig->expire) && (self::$cookieConfig->expire > 0))
+                    ? time() + self::$cookieConfig->expire
+                    : 0,
                 self::$cookieConfig->path,
                 self::$cookieConfig->domain,
                 (bool) self::$cookieConfig->secure);
