@@ -186,11 +186,12 @@ function csrfprotector_init() {
 	//==================================================================
 	// Adding csrftoken to request resulting from <form> submissions
 	// Add for each POST, while for mentioned GET request
+    // Skip forms that have 'no-csrf' class
 	// TODO - check for method
 	//==================================================================
 	// run time binding
 	document.querySelector('body').addEventListener('submit', function(event) {
-		if (event.target.tagName.toLowerCase() === 'form') {
+		if (event.target.tagName.toLowerCase() === 'form' && !element.classList.contains('no-csrf')) {
 			BasicSubmitInterceptor(event);
 		}
 	});
