@@ -191,7 +191,7 @@ function csrfprotector_init() {
 	//==================================================================
 	// run time binding
 	document.querySelector('body').addEventListener('submit', function(event) {
-		if (event.target.tagName.toLowerCase() === 'form' && !element.classList.contains('no-csrf')) {
+		if (event.target.tagName.toLowerCase() === 'form' && !event.target.classList.contains('no-csrf')) {
 			BasicSubmitInterceptor(event);
 		}
 	});
