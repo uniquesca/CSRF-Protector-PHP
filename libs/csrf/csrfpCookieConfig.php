@@ -51,7 +51,7 @@ if (!defined('__CSRF_PROTECTOR_csrfpCookieConfig__')) {
                 if (isset($cfg['path'])) $this->path = $cfg['path'];
                 if (isset($cfg['domain'])) $this->domain = $cfg['domain'];
                 if (isset($cfg['secure'])) $this->secure = (bool) $cfg['secure'];
-                if (isset($cfg['expire']) && $cfg['expire']) $this->expire = (int)$cfg['expire'];
+                if (isset($cfg['expire'])) $this->expire = (int)$cfg['expire'];
             }
         }
     }
