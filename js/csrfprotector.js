@@ -277,6 +277,9 @@ function csrfprotector_init() {
 			}
 		}
 
+		// We don't want to treat undefined async as "false" here
+		async = (typeof async === 'undefined') ? true : async;
+
 		return this.old_open(method, url, async, username, password);
 	}
 
